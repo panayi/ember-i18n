@@ -10,7 +10,7 @@ Ember.Logger.warn "CLDR.pluralForm not found. Em.I18n will not support count-bas
 
 findTemplate = (key, setOnMissing) ->
   Ember.assert "You must provide a translation key string, not %@".fmt(key), typeof key is "string"
-  locale = I18n.get("currentLocale")
+  locale = I18n.get("defaultLocale")
   parts = key.split(".")
   
   # Check the key if it is like 'en.title', 'el.title', 'de.title'
@@ -24,7 +24,7 @@ findTemplate = (key, setOnMissing) ->
   result
 
 I18n = Ember.Object.create(
-  currentLocale: 'en',
+  defaultLocale: 'en',
   locales: {},
 
   compile: Handlebars.compile
@@ -143,7 +143,7 @@ Handlebars.registerHelper 'translateAttr', (options) ->
 # Support for bindings in translations
 Handlebars.registerHelper "tt", (key, options) ->
   options.hash.keyBinding = key
-  options.hash.languageBinding = "Ember.I18n.currentLocale"
+  options.hash.languageBinding = "Ember.I18n.defaultLocale"
   view = Ember.View.extend(
     tagName: "span"
     template: Ember.Handlebars.compile("{{view.formattedContent}}")
