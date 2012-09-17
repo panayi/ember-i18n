@@ -152,9 +152,9 @@ Handlebars.registerHelper "tt", (key, options) ->
     tagName: "span"
     template: Ember.Handlebars.compile("{{view.formattedContent}}")
     formattedContent: (->
-      key = @get("key")
+      key = @get("key") or key
       language = @get("language")
-      Ember.Handlebars.helpers.t.call this, language + "." + key, options  if @get("key")
+      Ember.Handlebars.helpers.t.call this, language + "." + key, options  if key
     ).property("key", "language")
   )
   Ember.Handlebars.helpers.view.call this, view, options
