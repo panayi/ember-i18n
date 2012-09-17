@@ -20,7 +20,7 @@ findTemplate = (key, setOnMissing) ->
     key = parts.slice(1).join(".")
 
   translations = I18n.get("locales")[locale]
-  Ember.assert "Dictionary Ember.I18n.locale."+locale+" for locale "+language+" is not set", translations
+  Ember.assert "Dictionary Ember.I18n.locale."+locale+" for locale "+locale+" is not set", translations
 
   result = translations[key]
   result = translations[key] = I18n.compile("Missing translation: " + key)  unless result?  if setOnMissing
