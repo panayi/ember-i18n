@@ -72,7 +72,7 @@ I18n = Ember.Object.create(
   #     {{view ... titleTranslation="some.translation.key"}}
   TranslateableAttributes: Em.Mixin.create
     didInsertElement: ->
-      result = @_super.apply(this, arguments_)
+      result = @_super.apply(this, arguments)
       @_translateableAttributes = []
       for key of this
         path = this[key]
