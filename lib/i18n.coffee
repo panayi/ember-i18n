@@ -2,7 +2,7 @@ isTranslatedAttribute = /(.+)Translation$/
 
 # If we're on Ember 0.9.4 or later, we need the Ember.Handlebars
 # version of getPath, which knows how to look up globals properly.
-getPath = Ember.Handlebars.getPath || Ember.getPath
+getPath = Ember.Handlebars.getPath || Ember.get
 
 pluralForm = CLDR.pluralForm if CLDR?
 
@@ -89,7 +89,7 @@ Handlebars.registerHelper 't', (key, options) ->
 
   Em.keys(attrs).forEach (property)->
     isBindingMatch = property.match(isBinding)
-    if isBindingMatch
+    if isBindingMatch 
       # Get the current values for any bound properties:
       propertyName = isBindingMatch[1]
       bindPath = attrs[property]
