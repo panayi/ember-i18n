@@ -18,9 +18,13 @@ findTemplate = (key, setOnMissing) ->
   if parts and I18n.get("locales")[parts[0]]
     locale = parts[0]
     key = parts.slice(1).join(".")
-  result = I18n.get("locales")[locale][key]
-  result = I18n.get("locales")[locale][key] = I18n.compile("Missing translation: " + key)  unless result?  if setOnMissing
-  result = I18n.get("locales")[locale][key] = I18n.compile(result)  if (result?) and not $.isFunction(result)
+
+  translations = I18n.get("locales")[locale]
+  Ember.assert "Dictionary Ember.I18n.locale."+locale+" for locale "+language+" is not set", translations
+
+  result = translations[key]
+  result = translations[key] = I18n.compile("Missing translation: " + key)  unless result?  if setOnMissing
+  result = translations[key] = I18n.compile(result)  if (result?) and not $.isFunction(result)
   result
 
 I18n = Ember.Object.create(
