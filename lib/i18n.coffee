@@ -72,14 +72,26 @@ I18n = Ember.Object.create(
   #     {{view ... titleTranslation="some.translation.key"}}
   TranslateableAttributes: Em.Mixin.create
     didInsertElement: ->
-      result = @_super.apply(this, arguments)
-      for key, path of this
-        isTranslatedAttributeMatch = key.match isTranslatedAttribute
+      result = @_super.apply(this, arguments_)
+      @_translateableAttributes = []
+      for key of this
+        path = this[key]
+        isTranslatedAttributeMatch = key.match(isTranslatedAttribute)
         if isTranslatedAttributeMatch
           attribute = isTranslatedAttributeMatch[1]
-          translatedValue = I18n.t path
-          @$().attr attribute, translatedValue
+          @_translateableAttributes.pushObject
+            attribute: attribute
+            path: path
+
+      @translateAttributes()
       result
+
+    translateAttributes: (->
+      $this = @$()
+      translateableAttributes = @_translateableAttributes
+      translateableAttributes.forEach (hash) ->
+        $this.attr hash.attribute, I18n.t(hash.path)  if hash.attribute and hash.path
+    ).observes("Ember.I18n.currentLocale")
 )
 
 Em.I18n = I18n
