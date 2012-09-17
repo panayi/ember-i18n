@@ -32,13 +32,13 @@ is updated with the new translated content.
 ### Best practices
   * Define each dictionary `Em.I18n.locale.de`, `Em.I18n.locale.ru`, etc in its own file `{root_app}/config/locales/{language}.js`
 
-  * Make sure you use the `{{tt key}}` helper instead of `{{t key}}`` if you want to enable translation keys bindings and switch language on the fly.
+  * Make sure you use the `{{tt key}}` helper instead of `{{t key}}` if you want to enable translation keys bindings and switch language on the fly.
 
   * Let the user switch language by setting `Em.I18n.currentLocale`. Example:
 
-  changeLanguage: function(event, lang) {
-    Em.I18n.set('currentLocale', lang);
-  }
+    changeLanguage: function(event, lang) {
+      Em.I18n.set('currentLocale', lang);
+    }
 
 So here the proced, Define locale dictionaries in '{root_app}/config/locales/{language}.js'. 
 
