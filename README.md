@@ -36,11 +36,9 @@ is updated with the new translated content.
 
   * Let the user switch language by setting `Em.I18n.currentLocale`. Example:
 
-    changeLanguage: function(event, lang) {
-      Em.I18n.set('currentLocale', lang);
-    }
-
-So here the proced, Define locale dictionaries in '{root_app}/config/locales/{language}.js'. 
+      changeLanguage: function(event, lang) {
+        Em.I18n.set('currentLocale', lang);
+      }
 
 ### Examples
 
