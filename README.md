@@ -3,50 +3,18 @@
 Internationalization for Ember
 
 ### Requirements
-At a mininum you set `Em.I18n.locale.en` to an object containing your translation
-information (typically English). If you want to support inflection based on `count`, you will
+
+Set `Em.I18n.translations` to an object containing your translation
+information. If you want to support inflection based on `count`, you will
 also need to include the
 [CLDR.js pluralization library](https://github.com/jamesarosen/CLDR.js)
 and set `CLDR.defaultLocale` to the current locale code (e.g. "de").
-
-Additionally by defining translation keys `Em.I18n.locale[someLocale]` and doing
-
-    Em.I18n.set('currentLocale', someLocale);
-
-then the translated content is updated on the fly, using the `{{tt someKey}}` helper. For example,
-
-    Em.I18n.locale.en = {
-      'best': 'best'
-    }
-
-    Em.I18n.locale.el = {
-       'best': 'καλύτερο'
-    } 
-
-    {{tt best}}
-
-will get the correct key and render the translation. If `Em.I18n.currentLocale` is changed after render, the template
-is updated with the new translated content.
-
-
-### Best practices
-  * Define each dictionary `Em.I18n.locale.de`, `Em.I18n.locale.ru`, etc in its own file `{root_app}/config/locales/{language}.js`
-
-  * Make sure you use the `{{tt key}}` helper instead of `{{t key}}`` if you want to enable translation keys bindings and switch language on the fly.
-
-  * Let the user switch language by setting `Em.I18n.currentLocale`. Example:
-
-  changeLanguage: function(event, lang) {
-    Em.I18n.set('currentLocale', lang);
-  }
-
-So here the proced, Define locale dictionaries in '{root_app}/config/locales/{language}.js'. 
 
 ### Examples
 
 Given
 
-    Em.I18n.locale.en = {
+    Em.I18n.translations = {
       'user.edit.title': 'Edit User',
       'user.followers.title.one': 'One Follower',
       'user.followers.title.other': 'All {{count}} Followers',
@@ -117,13 +85,11 @@ yields
       Add
     </a>
 
-#### 
-
 ### Limitations
 
  * There is no way to pass interpolations to attribute translations. I can't
    think of a syntax to support this. It *might* be possible to look up
    interpolations from the current context.
- * All `Em.I18n.locale` language dictionaries **must** be fully populated before Ember
+ * `Em.I18n.translations` **must** be fully populated before Ember
    renders any views. There are no bindings on the translations themselves,
    so Ember will not know to re-render views when translations change.
