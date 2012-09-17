@@ -89,7 +89,7 @@ Handlebars.registerHelper 't', (key, options) ->
 
   Em.keys(attrs).forEach (property)->
     isBindingMatch = property.match(isBinding)
-    if isBindingMatch 
+    if isBindingMatch && property isnt 'contentBinding'
       # Get the current values for any bound properties:
       propertyName = isBindingMatch[1]
       bindPath = attrs[property]
@@ -129,3 +129,21 @@ Handlebars.registerHelper 'translateAttr', (options) ->
     translatedValue = I18n.t attrs[property]
     result.push '%@="%@"'.fmt(property, translatedValue)
   new Handlebars.SafeString result.join ' '
+
+
+# Support for bindings in translations
+inlineFormatter = (fn) ->
+  Ember.View.extend
+    tagName: "span"
+    template: Ember.Handlebars.compile("{{view.formattedContent}}")
+    formattedContent: (->
+      fn @get("content")  if @get("content")
+    ).property("content")
+
+Handlebars.registerHelper "t_bind", (property, options) ->
+  options.hash.contentBinding = property
+  view = inlineFormatter((content) ->    
+    Ember.Handlebars.helpers.t.call this, content, options
+  )
+  Ember.Handlebars.helpers.view.call this, view, options
+
