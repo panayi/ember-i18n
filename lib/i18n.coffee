@@ -9,15 +9,24 @@ pluralForm = CLDR.pluralForm if CLDR?
 Ember.Logger.warn "CLDR.pluralForm not found. Em.I18n will not support count-based inflection." unless pluralForm?
 
 findTemplate = (key, setOnMissing) ->
-  Ember.assert("You must provide a translation key string, not %@".fmt(key), typeof key is 'string')
-  result = I18n.translations[key]
-  if setOnMissing
-    result ?= I18n.translations[key] = I18n.compile "Missing translation: " + key
-  if result? and not $.isFunction(result)
-    result = I18n.translations[key] = I18n.compile result
+  Ember.assert "You must provide a translation key string, not %@".fmt(key), typeof key is "string"
+  locale = I18n.get("defaultLocale")
+  parts = key.split(".")
+  
+  # Check the key if it is like 'en.title', 'el.title', 'de.title'
+  # Then extract the first parts and check if Ember.I18n.locales[locale] exists
+  if parts and I18n.get("locales")[parts[0]]
+    locale = parts[0]
+    key = parts.slice(1).join(".")
+  result = I18n.get("locales")[locale][key]
+  result = I18n.get("locales")[locale][key] = I18n.compile("Missing translation: " + key)  unless result?  if setOnMissing
+  result = I18n.get("locales")[locale][key] = I18n.compile(result)  if (result?) and not $.isFunction(result)
   result
 
-I18n = {
+I18n = Ember.Object.create(
+  defaultLocale: 'en',
+  locales: {},
+
   compile: Handlebars.compile
 
   translations: {}
@@ -67,7 +76,7 @@ I18n = {
           translatedValue = I18n.t path
           @$().attr attribute, translatedValue
       result
-}
+)
 
 Em.I18n = I18n
 Ember.I18n = I18n
@@ -89,7 +98,7 @@ Handlebars.registerHelper 't', (key, options) ->
 
   Em.keys(attrs).forEach (property)->
     isBindingMatch = property.match(isBinding)
-    if isBindingMatch && property isnt 'contentBinding'
+    if isBindingMatch
       # Get the current values for any bound properties:
       propertyName = isBindingMatch[1]
       bindPath = attrs[property]
@@ -132,18 +141,16 @@ Handlebars.registerHelper 'translateAttr', (options) ->
 
 
 # Support for bindings in translations
-inlineFormatter = (fn) ->
-  Ember.View.extend
+Handlebars.registerHelper "tt", (key, options) ->
+  options.hash.keyBinding = key
+  options.hash.languageBinding = "Ember.I18n.defaultLocale"
+  view = Ember.View.extend(
     tagName: "span"
     template: Ember.Handlebars.compile("{{view.formattedContent}}")
     formattedContent: (->
-      fn @get("content")  if @get("content")
-    ).property("content")
-
-Handlebars.registerHelper "t_bind", (property, options) ->
-  options.hash.contentBinding = property
-  view = inlineFormatter((content) ->    
-    Ember.Handlebars.helpers.t.call this, content, options
+      key = @get("key")
+      language = @get("language")
+      Ember.Handlebars.helpers.t.call this, language + "." + key, options  if @get("key")
+    ).property("key", "language")
   )
   Ember.Handlebars.helpers.view.call this, view, options
-
