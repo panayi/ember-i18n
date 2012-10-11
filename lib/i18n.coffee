@@ -56,6 +56,7 @@ I18n = Ember.Object.create(
     setupTranslateableAttributes: setupTranslateableAttributes
     translateAttributes: (->
       $this = @$()
+      @setupTranslateableAttributes()  unless @_translateableAttributes
       translateableAttributes = @_translateableAttributes
       translateableAttributes.forEach (hash) ->
         $this.attr hash.attribute, I18n.t(hash.path)  if hash.attribute and hash.path
