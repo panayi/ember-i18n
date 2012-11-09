@@ -19,7 +19,6 @@
     Ember.assert("You must provide a translation key string, not %@".fmt(key), typeof key === "string");
     locale = I18n.get("currentLocale");
     parts = key.split(".");
-
     if (parts && I18n.get("locales")[parts[0]]) {
       locale = parts[0];
       key = parts.slice(1).join(".");
@@ -27,7 +26,6 @@
     translations = I18n.get("locales")[locale];
     Ember.assert("Dictionary Ember.I18n.locale." + locale + " for locale " + locale + " is not set", translations);
     result = translations[key];
-    
     if (!(setOnMissing ? result != null : void 0)) {
       result = translations[key] = I18n.compile("Missing translation: " + key);
     }
@@ -91,6 +89,9 @@
       translateAttributes: (function() {
         var $this, translateableAttributes;
         $this = this.$();
+        if (!this._translateableAttributes) {
+          this.setupTranslateableAttributes();
+        }
         translateableAttributes = this._translateableAttributes;
         return translateableAttributes.forEach(function(hash) {
           if (hash.attribute && hash.path) {
