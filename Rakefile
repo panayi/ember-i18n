@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require "bundler/gem_tasks"
 require 'pathname'
 Bundler.require
 project_dir = File.expand_path(File.dirname(__FILE__))
@@ -17,8 +18,8 @@ end
 
 desc 'Clean up generated JS files'
 task :clean do
-  rm_f project_dir + '/lib/*.js'
-  rm_f project_dir + '/spec/javascripts/*.js'
+  rm_f project_dir + '/app/assets/javascripts/ember-i18n/*.js'
+  rm_f project_dir + '/spec/javascripts/ember-i18n/*.js'
 end
 
 desc 'Compile coffeescript -> JS'
@@ -33,21 +34,21 @@ namespace :spec do
   end
 end
 
-directory project_dir + '/dist'
+directory project_dir + '/lib'
 
 namespace :build do
   desc "Build the distribution version of Em.I18n"
-  task :dist => [ :compile, project_dir + '/dist' ] do
+  task :dist => [ :compile, project_dir + '/lib' ] do
     version = (File.read project_dir + '/VERSION').strip
-    cp project_dir + '/lib/i18n.js', project_dir + "/dist/ember-i18n-#{version}.js"
-    puts "Copied i18n.js to dist/"
+    cp project_dir + '/lib/i18n.js', project_dir + "/app/assets/javascripts/ember-i18n/ember-i18n.js"
+    puts "Copied ember-i18n.js to app/assets/javascripts/"
   end
 
   desc "Build the latest version of Em.I18n"
-  task :latest => [ :compile, project_dir + '/dist' ] do
+  task :latest => [ :compile, project_dir + '/lib' ] do
     version = "latest"
-    cp project_dir + '/lib/i18n.js', project_dir + "/dist/ember-i18n-#{version}.js"
-    puts "Copied i18n.js to dist/"
+    cp project_dir + '/lib/i18n.js', project_dir + "/app/assets/javascripts/ember-i18n/ember-i18n.js"
+    puts "Copied ember-i18n.js to app/assets/javascripts/ember-i18n/"
   end
 end
 
