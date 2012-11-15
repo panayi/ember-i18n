@@ -1,6 +1,8 @@
 require 'bundler/setup'
 require "bundler/gem_tasks"
 require 'pathname'
+require 'rails'
+
 Bundler.require
 project_dir = File.expand_path(File.dirname(__FILE__))
 
